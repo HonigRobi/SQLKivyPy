@@ -1,0 +1,154 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'Message that will be displayed on users'' first issue'
+        pr-message: 'Message that will be displayed on users'' first pr'
+
+
+Here my SQL program, what I want editing for better program, need an serching motor,
+and delete button, what deleting all selected datas from database. The selection must
+clickking mouse inside the program window, and not with Sql orders only what programmer
+writting to program. My programs language what Imaking are hungarian thanks for my language
+s that, and IÍm don't speak good other languahe. I'm understand little english language and 
+much more smaller serbian language. So Here my SQL program:
+
+adatol.py file:
+
+from tkinter import *
+from tkinter import ttk
+from db_manager import *
+
+win = Tk()
+win.title("Adatbázis démó")
+win.geometry("1020x640")
+win.resizable(False,False)# Ez arra jó, hogy az ablak ne legyen újrra méretezhető!!!
+db_create()
+Label(win, text="Név", font="helvetica 12 bold").grid(row=0, column=0)
+nev = Entry(win, font="helvetica 20 bold")
+nev.grid(row=0, column=1, padx=5, pady=5)
+Label(win, text="Kor", font="helvetica 12 bold").grid(row=1, column=0)
+kor = Entry(win, font="helvetica 20 bold")
+kor.grid(row=1, column=1, padx=5, pady=5)
+Label(win, text="Nem", font="helvetica 12 bold").grid(row=2, column=0)
+nem = StringVar(win)
+nem.set("Válazd ki a nemed")
+nemek = OptionMenu(win, nem, "Válazd ki a nemed", "Férfi", "Nő")
+nemek.grid(row=2, column=1, padx=5, pady=5)
+Label(win, text="Pontok", font="helvetica 12 bold").grid(row=3, column=0)
+pontok = Entry(win, font="helvetica 20 bold")
+pontok.grid(row=3, column=1, padx=5, pady=5)
+Button(win, text="Adat bevitele", command=lambda: db_insert(nev, kor, nem, pontok), font="helvetica 12 bold").grid(row=4, column=0, columnspan=1, padx=5, pady=5)
+cols = ("Sorszám", "Név", "Kor", "Nem", "Pontszám")
+table = ttk.Treeview(win, columns=cols, show="headings")
+for col in cols:
+    table.heading(col, text=col)
+table.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+Button(win, text="Adatok lekérése", command=lambda: db_query(table), font="helvetica 12 bold").grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+Button(win, text="Exportálás CSV fájlba",command=db_export_csv, font="helvetica 12 bold").grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+Button(win, text="Adat/Adatok törlése", font="helvetica 12 bold").grid(row=8, column=0, columnspan=2, padx=5, pady=5)
+Button(win, text="Adat/adatok keresése", command=lambda: db_search(table, nev, kor, nem, pontok), font="helvetica 12 bold").grid(row=4, column=1, columnspan=1, padx=5, pady=5)
+win.mainloop()
+
+db_manager.py file:
+
+import sqlite3
+conn = None
+curs = None
+def db_create():
+    global conn, curs # ezeket fogja felül írni!
+    conn = sqlite3.connect("Felhasznalok/Adatok.db")
+    curs = conn.cursor()
+    curs.execute("Create TABLE IF NOT EXISTS Felhasznalok (nev TEXT, kor INTEGER, nem TEXT, pontok REAL)")
+def db_insert(nev, kor, nem, pontok):
+    if nev.get() == "" or nev.get() == "Ezt kötelező kitölteni!!!":
+        nev.delete(0, "end")
+        nev.insert(0, "Ezt kötelező kitölteni!!!")
+        return
+    if kor.get() == "" or kor.get() == "Ezt kötelező kitölteni!!!":
+        kor.delete(0, "end")
+        kor.insert(0, "Ezt kötelező kitölteni!!!")
+        return
+    if nem.get() == "Kötelező választani!!!" or nem.get() == "Válazd ki a nemed":
+        nem.set("Válazd ki a nemed")
+        nem.set("Kötelező választani!!!")
+        return
+    if pontok.get() == "" or pontok.get() == "Ezt kötelező kitölteni!!!":
+        pontok.delete(0, "end")
+        pontok.insert(0, "Ezt kötelező kitölteni!!!")
+        return
+    curs.execute("INSERT INTO Felhasznalok VALUES (?, ?, ?, ?)", (nev.get(), kor.get(), nem.get(), pontok.get()))
+    conn.commit()
+    nev.delete(0, "end")
+    kor.delete(0, "end")
+    pontok.delete(0, "end")
+    nem.set("Válazd ki a nemed")
+def db_query(table):
+    curs.execute("SELECT * FROM Felhasznalok")
+    datas = curs.fetchall()
+    table.delete(*table.get_children())
+    rowid = 1
+    for data in datas:
+        table.insert("", "end", values=(rowid, data[0],  data[1], data[2], data[3]))
+        rowid += 1
+# Ez a sor be fogja írni a táblázatba is az adatokat!
+def db_export_csv():
+    curs.execute("SELECT * FROM Felhasznalok")
+    datas = curs.fetchall()
+    with open("Felhasznalok/data.csv", "w", encoding="utf-8") as out_file:
+        out_file.write(";".join(["Név", "Kor", "Nem", "Pontok"]))
+        out_file.write("\n")
+        for data in datas:
+            out_file.write(";".join(str(d) for d in data))
+            out_file.write("\n")
+def db_search(table, nev, kor, nem, pontok):
+    curs.execute("SELECT 'nev.get() as nev', 'kor.get() as kor', 'nem.get() as nem', 'pontok.get() as pontok' FROM Felhasznalok") #VALUES (?, ?, ?, ?)", (nev.get(), kor.get(), nem.get(), pontok.get()))
+    data = curs.fetchone()
+    # if nev.get() == 1 or kor.get() == 1 or nem.get() == 1 or pontok.get() == 1:
+
+    rowid = 1
+    while data in curs:
+        assert data[0] == data[nev]
+        assert data[1] == data[kor]
+        assert data[2] == data[nem]
+        assert data[3] == data[pontok]
+        table.delete(*table.get_children())
+        table.insert("", "end", values=(rowid,  data[0],  data[1], data[2], data[3]))
+        rowid += 1
+    print(list(data[0]))
+def db_delete():
+    pass
+    
+def db_close():
+    if conn and curs:
+        print("Adatbázis lezárva!")
+        curs.close()
+        conn.close()
+
+Adat bevitele = Insert data
+Adat/Adatok keresése = Searching for data or datas - Have 4 parameters 
+what can searching in database: name, age, gender and score. for success
+found the member who searching, only one parameter need how you inserting the 
+data base. If have to much data, you can search this way:
+Name = Rozi
+Age = 30
+Gender = Male
+Score = 25
+With thoes parameters program will found all members and listing them who 
+compliance thoes upper written parameters.
+Adatok lekérése = query datas
+Exportálás CSV fájlba = Export to CSV file
+Adat/Adatok törlése = deletting data or datas - This is another function what 
+i'm can't adding to my button. The user quering datas, after in window selecting 
+one or more rows with mouse and clicking the data deleting button, and progran will
+deletting all sellected rows from database. 
+
+I'm not found nowhere and nothing about thoes themes, I need a help about this theme.
+Thank you for helping.
