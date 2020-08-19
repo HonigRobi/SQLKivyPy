@@ -1,0 +1,2 @@
+# SQLKivyPy
+I'm learning thoes at this time, just not found farther desceiption about that theme, need a litle help for continuing learning. Not have enough mony to paying for highnprized online learning, or in high scool learning. I leaarning Python programming, with SQL database and Kivy Gui. I searching one mentor, who help me. Later attaching programs, what I writting and a picture about my trouble with Kivy. 
