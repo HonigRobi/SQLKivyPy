@@ -1,24 +1,6 @@
-name: Greetings
-
-on: [pull_request, issues]
-
-jobs:
-  greeting:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: 'Message that will be displayed on users'' first issue'
-        pr-message: 'Message that will be displayed on users'' first pr'
-
-
 Here my SQL program, what I want editing for better program, need an serching motor,
 and delete button, what deleting all selected datas from database. The selection must
-clickking mouse inside the program window, and not with Sql orders only what programmer
-writting to program. My programs language what Imaking are hungarian thanks for my language
-s that, and IÍm don't speak good other languahe. I'm understand little english language and 
-much more smaller serbian language. So Here my SQL program:
+clickking mouse inside the program window, and not with Sql orders only what programmer writting to program. My programs language what I making are hungarian thanks for my languages that, and I'm don't speak good other language. I'm understand little english language and much more smaller serbian language. So Here my SQL program:
 
 adatol.py file:
 
