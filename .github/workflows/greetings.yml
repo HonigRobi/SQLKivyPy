@@ -1,6 +1,10 @@
 Here my SQL program, what I want editing for better program, need an serching motor,
 and delete button, what deleting all selected datas from database. The selection must
-clickking mouse inside the program window, and not with Sql orders only what programmer writting to program. My programs language what I making are hungarian thanks for my languages that, and I'm don't speak good other language. I'm understand little english language and much more smaller serbian language. So Here my SQL program:
+clickking mouse inside the program window, and not with Sql orders only what 
+programmer writting to program. My programs language what I making are hungarian 
+thanks for my languages that, and I'm don't speak good other language. I'm understand 
+little english language and much more smaller serbian language. So Here my SQL 
+program:
 
 adatol.py file:
 
@@ -11,7 +15,7 @@ from db_manager import *
 win = Tk()
 win.title("Adatbázis démó")
 win.geometry("1020x640")
-win.resizable(False,False)# Ez arra jó, hogy az ablak ne legyen újrra méretezhető!!!
+win.resizable(False,False)
 db_create()
 Label(win, text="Név", font="helvetica 12 bold").grid(row=0, column=0)
 nev = Entry(win, font="helvetica 20 bold")
@@ -80,7 +84,7 @@ def db_query(table):
     for data in datas:
         table.insert("", "end", values=(rowid, data[0],  data[1], data[2], data[3]))
         rowid += 1
-# Ez a sor be fogja írni a táblázatba is az adatokat!
+
 def db_export_csv():
     curs.execute("SELECT * FROM Felhasznalok")
     datas = curs.fetchall()
@@ -91,20 +95,8 @@ def db_export_csv():
             out_file.write(";".join(str(d) for d in data))
             out_file.write("\n")
 def db_search(table, nev, kor, nem, pontok):
-    curs.execute("SELECT 'nev.get() as nev', 'kor.get() as kor', 'nem.get() as nem', 'pontok.get() as pontok' FROM Felhasznalok") #VALUES (?, ?, ?, ?)", (nev.get(), kor.get(), nem.get(), pontok.get()))
-    data = curs.fetchone()
-    # if nev.get() == 1 or kor.get() == 1 or nem.get() == 1 or pontok.get() == 1:
+    pass
 
-    rowid = 1
-    while data in curs:
-        assert data[0] == data[nev]
-        assert data[1] == data[kor]
-        assert data[2] == data[nem]
-        assert data[3] == data[pontok]
-        table.delete(*table.get_children())
-        table.insert("", "end", values=(rowid,  data[0],  data[1], data[2], data[3]))
-        rowid += 1
-    print(list(data[0]))
 def db_delete():
     pass
     
@@ -114,6 +106,10 @@ def db_close():
         curs.close()
         conn.close()
 
+Where I writting pass, ther is the program section where need me a help, how can I 
+writing that properly, I tryed every where how I can, and not functioning, just 
+printing errors after erros on my console.
+ 
 Adat bevitele = Insert data
 Adat/Adatok keresése = Searching for data or datas - Have 4 parameters 
 what can searching in database: name, age, gender and score. for success
